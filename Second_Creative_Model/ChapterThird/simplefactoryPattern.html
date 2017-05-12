@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        .blue{
+            color: blue;
+        }
+    </style>
+    <title>简单工厂模式</title>
+    <h2>把类封装在一函数里面，这样我们只需要记住这个函数，然后通过这个函数就可以创建我们需要的对象为我所用，</h2>
+    <h2>不用咋关注创建这些对象到底依赖哪个基类了，我们只要知道这个函数就可以了</h2>
+    <p>构造函数】
+
+　　用来初始化新创建的对象的函数是构造函数。在例子中，Foo()函数是构造函数
+
+【实例对象】
+
+　　通过构造函数的new操作创建的对象是实例对象。可以用一个构造函数，构造多个实例对象
+    </p>
+    <h3 >bbb</h3>
+</head>
+<body>
+    <img src="../../lib/_proto_.png">
+</body>
+<script type="text/javascript">
+    //体育用品
+    //篮球基
+    function Foo(){};
+    var f1 = new Foo;
+    console.log(f1)
+    document.getElementsByTagName('h2')[0].style.color="blue";
+    // document.getElementById('h3').style.color="blue";
+    // document.getElementById('h3').className="blue";
+    console.log(document.getElementsByTagName('h3'));
+    //getElementsByTagName   得到的是数组
+    document.getElementsByTagName('h3')[0].style.color="blue";
+</script>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>观察者模式</title>
+    <p>老师是观察者，学生是订阅者</p>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+     //学生类 
+     var Student = function(result){
+        var that = this;
+        that.result= result;
+        that.say = function(){
+            console.log(that.result);
+        }
+     }
+     //回答问题方法
+     Student.prototype.answer = function(question){
+        //注册参数问题
+        Observer.regist(question,this.say);
+     }
+</script>
+</html>

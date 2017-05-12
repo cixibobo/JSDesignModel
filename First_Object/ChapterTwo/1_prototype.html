@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>对于js原型的理解</title>
+
+</head>
+<body>
+    <p>3 obj1.func.call(obj)方法
+        意思是将obj看成obj1,调用func方法
+    </p>
+    <img src="../../lib/prototype.png">
+    <h3><strong>来源网址:</strong><a href="http://www.cnblogs.com/yjf512/archive/2011/06/03/2071914.html" target="_blank">http://www.cnblogs.com/yjf512/archive/2011/06/03/2071914.html</a></h3>
+    <p>prototype是什么含义？
+        javascript中的每个对象都有prototype属性，Javascript中对象的prototype属性的解释是：返回对象类型原型的引用。
+        A.prototype = new B();
+        理解prototype不应把它和继承混淆。A的prototype为B的一个实例，
+    </p>
+    <h2>可以理解A将B中的方法和属性全部克隆了一遍。</h2>
+    <p>A能使用B的方法和属性。这里强调的是克隆而不是继承。可以出现这种情况：A的prototype是B的实例，同时B的prototype也是A的实例。
+    </p>
+</body>
+<script type="text/javascript">
+    /**
+     *最简单的子类，父类继承
+     *原型方法
+     */
+    function baseClass1(){
+        this.showMsg = function (){
+            console.log("baseClass1 :: showMsg ");
+        }
+    }
+    function extendClass1(){
+
+    }
+    extendClass1.prototype = new baseClass1();
+    // instance  实例
+    var instance1 = new extendClass1();
+    instance1.showMsg(); //  (baseClass1 :: showMsg )
+
+    /**
+     * 如果extendClass中本身包含有一个与baseClass的方法同名的方法会怎么样？
+     * 扩展试验
+     * 实验证明：函数运行时会先去本体的函数中去找，如果找到则运行，找不到则去prototype中寻找函数。或者可以理解为prototype不会克隆同名函数
+     */
+    function baseClass2(){
+        this.showMsg = function (){
+            console.log("baseClass2 :: showMsg ")
+        }
+    }
+    function extendClass2(){
+        this.showMsg = function (){
+            console.log("extendClass2 :: showMsg")
+        }
+    }
+    extendClass2.prototype = new baseClass2();
+    var instance2 = new extendClass2();
+    instance2.showMsg() //"extendClass2 :: showMsg"
+
+    /**
+     * 如果我想使用extendClass的一个实例instance调用baseClass的对象方法showMsg怎么办？
+     * 与上个例子刚刚相反
+     * 答案是可以使用call:
+     * obj1.func.call(obj)方法
+     * add.call(sub,3,1);
+        这个例子中的意思就是用 add 来替换 sub，add.call(sub,3,1) == add(3,1
+        意思是将obj看成obj1,调用func方法
+     */
+    function baseClass3(){
+        this.showMsg = function (){
+            console.log("baseClass3 :: showMsg ")
+        }
+    }
+    function extendClass3(){
+        this.showMsg = function (){
+            console.log("extendClass3 :: showMsg")
+        }
+    }
+    extendClass3.prototype = new baseClass3();
+    var instance3 = new extendClass3();
+    var baseinstance = new baseClass3();
+    //意思是将，instance3看成是baseinstance.showMSg()
+    //baseinstance.showMsg 来替换 instance3==baseinstance.showMsg();
+    //对象方法
+    baseinstance.showMsg.call(instance3)//"baseClass3 :: showMsg "
+    //类方法,会报错，call方法只能运用于对象
+    //baseClass3.showMsg.call(instance3)
+    
+    /**
+     * 最终方法
+     * 大综合
+     */
+    function baseClass4(){
+        this.showMsg = function(){
+            console.log("baseClass4::showMsg");
+        }
+        this.baseShowMsg = function(){
+            console.log("baseClass4::baseShowMsg")
+        }
+    }
+    baseClass4.showMsg = function(){
+        console.log("baseClass4 :: showMsg ::static");
+    }
+    function extendClass4(){
+        this.showMsg = function (){
+            console.log("extendClass4::showMsg");
+        }
+    }
+    extendClass4.showMsg = function (){
+        console.log("extendClass4::showMsg ::static");
+    }
+    extendClass4.prototype = new baseClass4();
+    var instance4 = new extendClass4();
+
+    instance4.showMsg();//onsole.log("extendClass4::showMsg");
+
+    instance4.baseShowMsg();//console.log("baseClass4::baseShowMsg")
+    //类的方法，永远是类的方法。为类私有的方法,不继承
+    baseClass4.showMsg.call(instance4)//console.log("baseClass4 :: showMsg ::static");
+    //类方法和对象方法，是不一样的哇！！
+    extendClass4.showMsg();//console.log("extendClass4::showMsg ::static");
+    var baseinstance4 = new baseClass4();
+    baseinstance4.showMsg.call(instance4)//console.log("baseClass4::baseShowMsg")
+</script>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>面向对象，封装</title>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+/**
+ * @param {类，变量手写大写字母}
+ * @param {[type]}
+ * @param {[type]}
+ */
+    var Book = function(id,bookname,price){
+        this.id=id;
+        this.bookname=bookname;
+        this.price=price;
+    }
+
+    //通过类的原型，增加一个function
+    Book.prototype.display = function(){
+
+    };
+    //或者
+    Book.prototype = {
+        display : function(){}
+    }
+
+    //新建一个book 对象
+    var book = new Book(10,'javascript设计模式',50);
+    console.log(book.bookname);
+/**
+ * 类的私有，公有的属性，方法
+ */
+    var Book1 = function(id,name,price){
+        //私有属性
+        var num = 1;
+        //私有方法
+        function checkId(){
+
+        };
+        //特权方法
+        this.getName = function(){};
+        this.getPrice = function(){};
+        this.setName = function(){
+            this.name=name;
+        };
+        this.setPrice = function(){
+
+        };
+        //对象共有属性
+        this.id=id;
+        //对象公有方法
+        this.copy = function(){};
+        //构造器
+        this.setName(name);
+        this.setPrice(price)
+    }
+    //类静态的公有属性(对象不能访问)
+    Book1.isChinese = true;
+    //类静态的公有方法(对象不能访问)
+    Book1.resetTime = function(){
+        console.log('new Tiem')
+    }
+    Book1.prototype = {
+        //公有属性
+        isJSBOOK : false,
+        //公有方法
+        display : function(){}
+    }
+    var b = new Book1(11,'javascript设计模式',50)
+    console.log(b.num)  //undefined
+    console.log(b.isJSBOOK) //false
+    console.log(b.id);  //11
+    console.log(b.isChinese)  //undefined
+    //类的静态属性，可以通过类的自身访问
+    console.log(Book1.isChinese); //true
+    Book1.resetTime(); // new Tiem
+    console.log('this,setName function '+b.name); // javascript设计模式
+/**
+ *   闭包的实现
+ *   我们经常将类的静态变量通过闭包来实现
+ */
+    //利用闭包实现
+    var Book2 = (function(){
+        //静态私有变量
+        var bookNum = 0;
+        //静态私有方法
+        function checkBook(name) {}
+        //创建类
+        function _book(newId, newName ,newPrice){
+            //私有变量
+            var name , price;
+            //私有方法
+            function checkID(id){}
+            //特权方法
+            this.getName = function(){
+                return newName
+            };
+            this.getPrice = function(){};
+            this.setName = function(){
+                this.newName = name;
+            };
+            this.setPrice = function(){};
+            //公有属性
+            this.id = newId;
+            //公有方法
+            this.copy = function(){};
+            bookNum++
+            if(bookNum > 100){
+               alert('我们仅出版100本书');
+            }
+            //构造器
+            this.setName(name)
+            this.setPrice(price)
+        }
+        //构建原型
+        _book.prototype = {
+            //静态公有属性
+            isJSBOOK : false,
+            //静态公有方法
+            display : function(){}
+        }
+        //返回类
+        return _book;
+    })(book2);
+    var book2 = new Book2(11,'java设计模式',20);
+    console.log(book2.isJSBOOK);
+    //跟上面的构建方法，结果是一样的，只是会看上去更像整体
+/**
+ * 创建对象的安全模式
+ * 防止忘了new 一个对象实例
+ */
+    var Book3 = function(title,time, type){
+        this.title = title;
+        this.time = time;
+        this.type = type;
+    }
+    var book3 = new Book3('javascript','2015','js');
+    var _book3 = Book3('javascript','2015','js');
+    console.log(book3)
+    console.log(_book3);//undefined
+    //全局变量是window的属性
+    var wen=12;
+    alert(wen);//等价于alert(window.wen);
+    console.log(title);//javascript
+    console.log(window.title);//javascript 类比是一样的
+    //图书安全类
+    var Book4 = function(title , time ,type){
+        //判断执行过程中this是否是当前这个对象(如果是说明是用new创建的)
+        if(this instanceof Book4){//instanceof只能用来判断对象和函数，不能用来判断字符串和数字等
+            //typeof会返回一个变量的基本类型,instanceof返回的是一个布尔值
+            this.title = title;
+            this.time = time;
+            this.type = type;
+         }
+         //否则重新创建这个对象
+         else{
+            return new Book4(title , time ,type)
+         }
+    }
+
+</script>
+</html>

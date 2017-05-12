@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>多继承</title>
+</head>
+<body>
+    <h2>js中继承是依赖于原型prototype链实现的，只有一条原型链，所以理论上是不能继承多个父类的</h2>
+    <h2>通过一些技巧方法，可以继承多个对象的属性来实现类似的多继承</h2>
+</body>
+<script type="text/javascript">
+    //---------------------------------------------------------------------单继承  属性复制
+    //// var json = {
+    //     "tt":"bb",
+    //     "aa":"cc"
+    // }
+    // for( var property in json ){
+    //     alert(property) //tt,aa
+    // }
+    var extend = function(target, source){
+        //遍历源对象中的属性
+        for (var property in source){   
+            target[property] = source[property];  //不是数组，是对象
+        }
+        //返回目标对象
+        return target;
+    }
+    //extend方法的实现就是对对象中的属性的一个复制过程哇，但是只能复制类型的属性，对于引用类型的属性它无能为力
+    //
+    var book = {
+        name: 'javascript',
+        alike:['css','html ','javascript']
+    }
+    var anotherBook = {
+        color:'blue'
+    }
+    extend(anotherBook,book);
+    console.log(anotherBook.name)//avascript'
+    console.log(book)
+    anotherBook.alike.push('ajax');
+    console.log(anotherBook)
+    anotherBook.name="设计模式";
+    console.log(anotherBook.name); //设计模式"
+    console.log(anotherBook.alike);//css','html ','javascript'.ajax
+    console.log(book.name); //javascript
+    console.log(book.alike);//css','html ','javascript'.ajax  ????为啥子呢
+
+    //---------------------------多继承-----------------------------------------------------
+    var mix = function (){
+        var i =1;                   //从第二个参数起为被继承的对象
+        len =arguments.length,      //获取参数长度
+        target = arguments[0] ,     // 第一个对象为目标对象
+        arg;                        //缓存参数对象
+        //遍历被继承的对象
+        for(;i<len;i++){
+            //缓存当前对象
+            arg=arguments[i];
+            //遍历被继承对象中的属性
+            for (var property in arg){
+                //将被继承对象中的属性复制到目标对象中
+                target[property] = arg[property]
+            }
+        }
+        return target ;
+    }
+    //mix 方法作用将传入的多个对象的属性复制到源对象中，这样既可以实现对多个对象的属性的继承
+    //但是使用的时候需要传入目标对象（第一个参数，需要继承的对象）
+    //--------绑到原生对象Object上，这样所有的对象就可以拥有这个方法了
+    Object.prototype.mix  = function(){
+        var i =0;                   //从第二个参数起为被继承的对象
+        len =arguments.length,      //获取参数长度
+        target = arguments[0] ,     // 第一个对象为目标对象
+        arg;                        //缓存参数对象
+        //遍历被继承的对象
+        for(;i<len;i++){
+            //缓存当前对象
+            arg=arguments[i];
+            //遍历被继承对象中的属性
+            for (var property in arg){
+                //将被继承对象中的属性复制到目标对象中
+                target[property] = arg[property]
+            }
+        }
+    }
+    //例如
+    //??otherBook.mix(book1,book2)
+</script>
+</html>
